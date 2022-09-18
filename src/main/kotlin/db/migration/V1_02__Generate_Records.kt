@@ -1,7 +1,7 @@
 package db.migration
 
 import com.github.javafaker.Faker
-import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 import kotlin.streams.asSequence
 import org.flywaydb.core.api.migration.BaseJavaMigration
@@ -87,7 +87,9 @@ class V1_02__Generate_Records : BaseJavaMigration() {
         .addValue("firstName", faker.name().firstName())
         .addValue("lastName", faker.name().lastName())
         .addValue("positionId", positionId)
-        .addValue("dateOfBirth", LocalDate.from(faker.date().birthday().toInstant()))
+        .addValue(
+          "dateOfBirth",
+          faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
 
     jdbcTemplate.update(INSERT_EMPLOYEE, params)
     return id
