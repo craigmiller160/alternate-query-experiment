@@ -1,9 +1,12 @@
 package io.craigmiller160.alternatequeryexperiment.data
 
+import com.github.javafaker.Faker
+import java.time.LocalDate
 import java.util.UUID
 import javax.annotation.PostConstruct
 import kotlin.streams.asSequence
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.stereotype.Component
 
 @Component
@@ -32,9 +35,21 @@ class GenerateData(private val jdbcTemplate: JdbcTemplate) {
           VALUES (:id, :teamId, :employeeId)
       """
   }
+
+  private val faker = Faker()
+
   @PostConstruct
   fun generate() {
     val positions = getPositions()
+    (0..5).forEach { index -> LocalDate.from(faker.date().birthday().toInstant()) }
+  }
+
+  private fun createEmployee(positions: Positions, isSupervisor: Boolean): UUID {
+    val params =
+      MapSqlParameterSource()
+        .addValue("id", UUID.randomUUID())
+        .addValue("firstName", faker.name().firstName())
+        .addValue("lastName", faker.name().lastName())
   }
 
   private fun getPositions(): Positions {
