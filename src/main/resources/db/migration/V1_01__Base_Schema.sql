@@ -21,11 +21,11 @@ CREATE TABLE employees(
 
 CREATE FUNCTION is_supervisor (employee_id UUID) RETURNS BOOLEAN
 AS $$
-SELECT COUNT(*) > 0
-FROM employees
-     JOIN positions ON employees.position_id = positions.id
-WHERE employees.id = employee_id
-  AND positions.name = 'Supervisor'
+    SELECT COUNT(*) > 0
+    FROM employees
+    JOIN positions ON employees.position_id = positions.id
+    WHERE employees.id = employee_id
+    AND positions.name = 'Supervisor'
 $$ LANGUAGE sql;
 
 CREATE TABLE teams(
