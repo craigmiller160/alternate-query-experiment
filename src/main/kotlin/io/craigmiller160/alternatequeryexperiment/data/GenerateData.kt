@@ -19,6 +19,18 @@ class GenerateData(private val jdbcTemplate: JdbcTemplate) {
             INSERT INTO employees(id, first_name, last_name, date_of_birth, position_id)
             VALUES (:id, :firstName, :lastName, :dateOfBirth, :positionId)
         """
+
+    private const val INSERT_TEAM =
+      """
+          INSERT INTO teams (id, supervisor_id)
+          VALUES (:id, :supervisorId)
+      """
+
+    private const val INSERT_TEAM_MEMBER =
+      """
+          INSERT INTO team_members (id, team_id, employee_id)
+          VALUES (:id, :teamId, :employeeId)
+      """
   }
   @PostConstruct
   fun generate() {
