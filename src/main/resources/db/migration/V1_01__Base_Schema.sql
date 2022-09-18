@@ -1,5 +1,5 @@
 CREATE
-    EXTENSION pg_crypto;
+    EXTENSION pgcrypto;
 
 CREATE
     TABLE
