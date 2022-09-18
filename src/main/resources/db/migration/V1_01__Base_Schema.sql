@@ -60,3 +60,14 @@ CREATE
                 is_supervisor(supervisor_id)
             )
         );
+
+CREATE
+    TABLE
+        team_members(
+            id UUID NOT NULL,
+            team_id UUID NOT NULL,
+            employee_id UUID NOT NULL,
+            PRIMARY KEY(id),
+            FOREIGN KEY(team_id) REFERENCES teams(id),
+            FOREIGN KEY(employee_id) REFERENCES employees(id)
+        );
