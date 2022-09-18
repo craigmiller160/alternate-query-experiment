@@ -1,4 +1,4 @@
-package io.craigmiller160.alternatequeryexperiment.data.migration
+package db.migration
 
 import com.github.javafaker.Faker
 import java.time.LocalDate
