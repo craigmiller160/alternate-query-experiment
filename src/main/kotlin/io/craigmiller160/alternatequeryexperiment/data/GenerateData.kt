@@ -17,9 +17,13 @@ class GenerateData(private val jdbcTemplate: JdbcTemplate) {
     private const val INSERT_EMPLOYEE =
       """
             INSERT INTO employees(id, first_name, last_name, date_of_birth, position_id)
+            VALUES (:id, :firstName, :lastName, :dateOfBirth, :positionId)
         """
   }
-  @PostConstruct fun generate() {}
+  @PostConstruct
+  fun generate() {
+    val positions = getPositions()
+  }
 
   private fun getPositions(): Positions {
     val nullableResult =
