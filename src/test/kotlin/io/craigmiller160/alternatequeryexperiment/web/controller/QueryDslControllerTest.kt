@@ -2,9 +2,13 @@ package io.craigmiller160.alternatequeryexperiment.web.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.repository.EmployeeRepository
 import io.craigmiller160.alternatequeryexperiment.data.repository.PositionRepository
 import io.craigmiller160.alternatequeryexperiment.web.type.EmployeeDTO
+import java.util.UUID
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,6 +27,24 @@ class QueryDslControllerTest {
   @Autowired private lateinit var employeeRepository: EmployeeRepository
   @Autowired private lateinit var positionRepository: PositionRepository
 
+  private lateinit var positionMap: Map<UUID, String>
+  private lateinit var employees: List<Employee>
+
+  @BeforeEach
+  fun setup() {
+    positionMap =
+      positionRepository.findAll().associate { position -> position.id to position.name }
+    employees =
+      employeeRepository.findAll().sortedWith { emp1, emp2 ->
+        val lastNameCompare = emp1.lastName?.compareTo(emp2?.lastName ?: "") ?: 1
+        if (lastNameCompare == 0) {
+          emp1.firstName?.compareTo(emp2?.firstName ?: "") ?: 1
+        } else {
+          lastNameCompare
+        }
+      }
+  }
+
   @Test
   fun getAllEmployees() {
     val responseString =
@@ -34,8 +56,16 @@ class QueryDslControllerTest {
         .contentAsString
     val type = jacksonTypeRef<List<EmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
-    println(employees)
-    // TODO ultimately need to validate all the returned employees and figure out how to set the
-    // position name in the DTOs
+    assertThat(employees).hasSize(this.employees.size)
+    employees.forEachIndexed { index, employee ->
+      val expected = this.employees[index]
+      assertThat(employee)
+        .hasFieldOrPropertyWithValue("id", expected.id)
+        .hasFieldOrPropertyWithValue("firstName", expected.firstName)
+        .hasFieldOrPropertyWithValue("lastName", expected.lastName)
+        .hasFieldOrPropertyWithValue("dateOfBirth", expected.dateOfBirth)
+        .hasFieldOrPropertyWithValue("positionId", expected.positionId)
+        .hasFieldOrPropertyWithValue("positionName", positionMap[expected.positionId])
+    }
   }
 }

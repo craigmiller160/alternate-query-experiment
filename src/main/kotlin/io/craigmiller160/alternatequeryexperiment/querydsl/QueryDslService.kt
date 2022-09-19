@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service
 class QueryDslService(private val queryFactory: JPAQueryFactory) {
   // TODO add pagination
   fun getAllEmployees(): List<EmployeeDTO> {
+    //    PathBuilderFactory().create()
+    //    Querydsl(null, null)
     // TODO try to find some way to use the constructor of the DTO directly
     return queryFactory
       .query()
@@ -25,6 +27,7 @@ class QueryDslService(private val queryFactory: JPAQueryFactory) {
           QPosition.position.name))
       .from(QEmployee.employee, QPosition.position)
       .where(QPosition.position.id.eq(QEmployee.employee.positionId))
+      .orderBy(QEmployee.employee.lastName.asc(), QEmployee.employee.firstName.asc())
       .fetch()
   }
 }
