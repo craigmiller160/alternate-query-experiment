@@ -27,7 +27,9 @@ class QueryDslService(
           QEmployee.employee.dateOfBirth,
           QEmployee.employee.positionId,
           QPosition.position.name))
-      .from(QEmployee.employee, QPosition.position)
+      .from(QEmployee.employee)
+      .join(QPosition.position)
+      .on(QEmployee.employee.positionId.eq(QPosition.position.id))
       .where(QPosition.position.id.eq(QEmployee.employee.positionId))
       .orderBy(QEmployee.employee.lastName.asc(), QEmployee.employee.firstName.asc())
       .fetch()
