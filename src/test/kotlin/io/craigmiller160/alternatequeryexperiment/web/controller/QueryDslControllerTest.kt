@@ -10,6 +10,7 @@ import io.craigmiller160.alternatequeryexperiment.data.repository.PositionReposi
 import io.craigmiller160.alternatequeryexperiment.data.repository.TeamMemberRepository
 import io.craigmiller160.alternatequeryexperiment.data.repository.TeamRepository
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
@@ -83,5 +84,34 @@ class QueryDslControllerTest {
     }
   }
 
-  @Test fun getTeam() {}
+  @Test
+  fun getTeam() {
+    val team = teams.first()
+    val supervisor = this.employees.first { it.id == team.supervisorId }
+    val teamMembers = this.teamMembers.filter { it.teamId == team.id }
+    val teamMemberEmployees =
+      this.employees.filter { emp -> teamMembers.any { tm -> tm.employeeId == emp.id } }
+    val responseString =
+      mockMvc
+        .get("/querydsl/teams/${team.id}")
+        .andExpect { status { isOk() } }
+        .andReturn()
+        .response
+        .contentAsString
+    val teamResponse = objectMapper.readValue(responseString, GetTeamDTO::class.java)
+    assertThat(teamResponse)
+      .hasFieldOrPropertyWithValue("id", team.id)
+      .hasFieldOrPropertyWithValue("supervisorId", team.supervisorId)
+      .hasFieldOrPropertyWithValue("supervisorFirstName", supervisor.firstName)
+      .hasFieldOrPropertyWithValue("supervisorLastName", supervisor.lastName)
+    assertThat(teamResponse.members).hasSize(teamMemberEmployees.size)
+    teamResponse.members.forEachIndexed { index, teamMember ->
+      val expectedTeamMember = teamMemberEmployees[index]
+      assertThat(teamMember)
+        .hasFieldOrPropertyWithValue("id", expectedTeamMember.id)
+        .hasFieldOrPropertyWithValue("firstName", expectedTeamMember.firstName)
+        .hasFieldOrPropertyWithValue("lastName", expectedTeamMember.lastName)
+        .hasFieldOrPropertyWithValue("positionName", positionMap[expectedTeamMember.positionId])
+    }
+  }
 }
