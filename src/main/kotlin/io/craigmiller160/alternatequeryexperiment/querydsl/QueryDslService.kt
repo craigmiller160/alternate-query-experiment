@@ -12,7 +12,6 @@ import io.craigmiller160.alternatequeryexperiment.mapper.TeamMapper
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
-import java.lang.RuntimeException
 import java.util.UUID
 import kotlin.RuntimeException
 import org.springframework.data.domain.PageRequest
