@@ -1,6 +1,7 @@
 package io.craigmiller160.alternatequeryexperiment.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
+import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
@@ -9,14 +10,13 @@ import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.data.jpa.repository.support.Querydsl
 import org.springframework.stereotype.Service
 
 @Service
 class QueryDslService(
   private val queryFactory: JPAQueryFactory,
   private val employeeMapper: EmployeeMapper,
-  private val employeeQuerydsl: Querydsl
+  private val queryDslSupport: QueryDslSupport
 ) {
   fun getAllEmployees(page: Int, size: Int): PageResult<GetEmployeeDTO> {
     val baseQuery =
@@ -31,7 +31,8 @@ class QueryDslService(
     val pageable =
       PageRequest.of(page, size, Sort.by(Sort.Order.asc("lastName"), Sort.Order.asc("firstName")))
 
-    return employeeQuerydsl
+    return queryDslSupport
+      .newQuerydsl(Employee::class.java)
       .applyPagination(pageable, baseQuery)
       .select(
         QGetEmployeeProjection(
