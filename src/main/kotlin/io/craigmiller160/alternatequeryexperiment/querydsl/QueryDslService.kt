@@ -7,7 +7,9 @@ import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
 import io.craigmiller160.alternatequeryexperiment.mapper.EmployeeMapper
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
+import java.util.UUID
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -45,9 +47,13 @@ class QueryDslService(
       .fetch()
       .let { employeeMapper.queryDslGetEmployeeProjectionListToDto(it) }
       .let { PageResult(it, count) }
+
+    //      .orderBy(QEmployee.employee.lastName.asc(), QEmployee.employee.firstName.asc())
+    //      .offset(page.toLong() * size.toLong())
+    //      .limit(size.toLong())
   }
 
-  //      .orderBy(QEmployee.employee.lastName.asc(), QEmployee.employee.firstName.asc())
-  //      .offset(page.toLong() * size.toLong())
-  //      .limit(size.toLong())
+  fun getTeam(teamId: UUID): GetTeamDTO {
+    TODO()
+  }
 }
