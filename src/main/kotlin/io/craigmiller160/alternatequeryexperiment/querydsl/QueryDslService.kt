@@ -8,6 +8,7 @@ import io.craigmiller160.alternatequeryexperiment.data.entity.QTeam
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetTeamProjection
 import io.craigmiller160.alternatequeryexperiment.mapper.EmployeeMapper
+import io.craigmiller160.alternatequeryexperiment.mapper.TeamMapper
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
@@ -22,7 +23,8 @@ import org.springframework.stereotype.Service
 class QueryDslService(
   private val queryFactory: JPAQueryFactory,
   private val employeeMapper: EmployeeMapper,
-  private val queryDslSupport: QueryDslSupport
+  private val queryDslSupport: QueryDslSupport,
+  private val teamMapper: TeamMapper
 ) {
   fun getAllEmployees(page: Int, size: Int): PageResult<GetEmployeeDTO> {
     val baseQuery =
@@ -73,5 +75,6 @@ class QueryDslService(
             QEmployee.employee.lastName))
         .fetchOne()
         ?: throw RuntimeException("Not found: $teamId")
+    return team.let { teamMapper.getTeamProjectionToGetTeamDTO(it) }
   }
 }
