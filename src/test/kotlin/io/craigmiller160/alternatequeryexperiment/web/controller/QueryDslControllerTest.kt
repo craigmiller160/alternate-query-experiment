@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.repository.EmployeeRepository
 import io.craigmiller160.alternatequeryexperiment.data.repository.PositionRepository
-import io.craigmiller160.alternatequeryexperiment.web.type.EmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -54,7 +54,7 @@ class QueryDslControllerTest {
         .andReturn()
         .response
         .contentAsString
-    val type = jacksonTypeRef<List<EmployeeDTO>>()
+    val type = jacksonTypeRef<List<GetEmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
     assertThat(employees).hasSize(this.employees.size)
     employees.forEachIndexed { index, employee ->

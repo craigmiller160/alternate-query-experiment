@@ -3,20 +3,20 @@ package io.craigmiller160.alternatequeryexperiment.querydsl
 import com.querydsl.jpa.impl.JPAQueryFactory
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
-import io.craigmiller160.alternatequeryexperiment.web.type.EmployeeDTO
-import io.craigmiller160.alternatequeryexperiment.web.type.QEmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
+import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import org.springframework.stereotype.Service
 
 @Service
 class QueryDslService(private val queryFactory: JPAQueryFactory) {
   // TODO add pagination
-  fun getAllEmployees(): List<EmployeeDTO> {
+  fun getAllEmployees(): List<GetEmployeeDTO> {
     //    PathBuilderFactory().create()
     //    Querydsl(null, null)
     return queryFactory
       .query()
       .select(
-        QEmployeeDTO(
+        QGetEmployeeProjection(
           QEmployee.employee.id,
           QEmployee.employee.firstName,
           QEmployee.employee.lastName,
