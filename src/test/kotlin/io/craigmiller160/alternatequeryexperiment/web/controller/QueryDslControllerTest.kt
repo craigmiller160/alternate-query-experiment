@@ -2,6 +2,8 @@ package io.craigmiller160.alternatequeryexperiment.web.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import io.craigmiller160.alternatequeryexperiment.data.repository.EmployeeRepository
+import io.craigmiller160.alternatequeryexperiment.data.repository.PositionRepository
 import io.craigmiller160.alternatequeryexperiment.web.type.EmployeeDTO
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,6 +20,8 @@ import org.springframework.test.web.servlet.get
 class QueryDslControllerTest {
   @Autowired private lateinit var mockMvc: MockMvc
   @Autowired private lateinit var objectMapper: ObjectMapper
+  @Autowired private lateinit var employeeRepository: EmployeeRepository
+  @Autowired private lateinit var positionRepository: PositionRepository
 
   @Test
   fun getAllEmployees() {
