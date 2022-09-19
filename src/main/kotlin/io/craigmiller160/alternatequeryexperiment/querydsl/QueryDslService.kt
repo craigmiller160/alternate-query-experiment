@@ -29,7 +29,7 @@ class QueryDslService(
     val count = baseQuery.select(QEmployee.employee.id.count()).fetchFirst()
 
     val pageable =
-      PageRequest.of(page, size, Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")))
+      PageRequest.of(page, size, Sort.by(Sort.Order.asc("lastName"), Sort.Order.asc("firstName")))
 
     return employeeQuerydsl
       .applyPagination(pageable, baseQuery)
