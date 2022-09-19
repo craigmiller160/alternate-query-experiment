@@ -31,5 +31,7 @@ class QueryDslControllerTest {
     val type = jacksonTypeRef<List<EmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
     println(employees)
+    // TODO ultimately need to validate all the returned employees and figure out how to set the
+    // position name in the DTOs
   }
 }
