@@ -91,6 +91,7 @@ class QueryDslControllerTest {
     val teamMembers = this.teamMembers.filter { it.teamId == team.id }
     val teamMemberEmployees =
       this.employees.filter { emp -> teamMembers.any { tm -> tm.employeeId == emp.id } }
+
     val responseString =
       mockMvc
         .get("/querydsl/teams/${team.id}")
@@ -99,20 +100,20 @@ class QueryDslControllerTest {
         .response
         .contentAsString
     val teamResponse = objectMapper.readValue(responseString, GetTeamDTO::class.java)
+
     assertThat(teamResponse)
       .hasFieldOrPropertyWithValue("id", team.id)
       .hasFieldOrPropertyWithValue("supervisorId", team.supervisorId)
       .hasFieldOrPropertyWithValue("supervisorFirstName", supervisor.firstName)
       .hasFieldOrPropertyWithValue("supervisorLastName", supervisor.lastName)
-    //    assertThat(teamResponse.members).hasSize(teamMemberEmployees.size)
-    //    teamResponse.members.forEachIndexed { index, teamMember ->
-    //      val expectedTeamMember = teamMemberEmployees[index]
-    //      assertThat(teamMember)
-    //        .hasFieldOrPropertyWithValue("id", expectedTeamMember.id)
-    //        .hasFieldOrPropertyWithValue("firstName", expectedTeamMember.firstName)
-    //        .hasFieldOrPropertyWithValue("lastName", expectedTeamMember.lastName)
-    //        .hasFieldOrPropertyWithValue("positionName",
-    // positionMap[expectedTeamMember.positionId])
-    //    }
+    assertThat(teamResponse.members).hasSize(teamMemberEmployees.size)
+    teamResponse.members.forEachIndexed { index, teamMember ->
+      val expectedTeamMember = teamMemberEmployees[index]
+      assertThat(teamMember)
+        .hasFieldOrPropertyWithValue("id", expectedTeamMember.id)
+        .hasFieldOrPropertyWithValue("firstName", expectedTeamMember.firstName)
+        .hasFieldOrPropertyWithValue("lastName", expectedTeamMember.lastName)
+        .hasFieldOrPropertyWithValue("positionName", positionMap[expectedTeamMember.positionId])
+    }
   }
 }

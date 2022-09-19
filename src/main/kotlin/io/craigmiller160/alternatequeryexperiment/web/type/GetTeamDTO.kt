@@ -13,5 +13,6 @@ data class GetTeamDTO(
   val id: UUID,
   val supervisorId: UUID,
   val supervisorFirstName: String,
-  val supervisorLastName: String
+  val supervisorLastName: String,
+  val members: List<GetTeamMemberDTO>
 )

@@ -5,7 +5,9 @@ import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
 import io.craigmiller160.alternatequeryexperiment.data.entity.QTeam
+import io.craigmiller160.alternatequeryexperiment.data.entity.QTeamMember
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
+import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetTeamMemberProjection
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetTeamProjection
 import io.craigmiller160.alternatequeryexperiment.mapper.EmployeeMapper
 import io.craigmiller160.alternatequeryexperiment.mapper.TeamMapper
@@ -74,6 +76,24 @@ class QueryDslService(
             QEmployee.employee.lastName))
         .fetchOne()
         ?: throw RuntimeException("Not found: $teamId")
-    return team.let { teamMapper.getTeamProjectionToGetTeamDTO(it) }
+
+    val members =
+      queryFactory
+        .query()
+        .from(QTeamMember.teamMember)
+        .join(QEmployee.employee)
+        .on(QTeamMember.teamMember.employeeId.eq(QEmployee.employee.id))
+        .join(QPosition.position)
+        .on(QPosition.position.id.eq(QEmployee.employee.positionId))
+        .where(QTeamMember.teamMember.teamId.eq(team.id))
+        .select(
+          QGetTeamMemberProjection(
+            QEmployee.employee.id,
+            QEmployee.employee.firstName,
+            QEmployee.employee.lastName,
+            QPosition.position.name))
+        .fetch()
+
+    return teamMapper.getTeamProjectionToGetTeamDTO(team, members)
   }
 }
