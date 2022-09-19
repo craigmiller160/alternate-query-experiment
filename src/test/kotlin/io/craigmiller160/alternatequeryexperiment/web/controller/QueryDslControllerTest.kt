@@ -6,6 +6,7 @@ import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.repository.EmployeeRepository
 import io.craigmiller160.alternatequeryexperiment.data.repository.PositionRepository
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -54,13 +55,14 @@ class QueryDslControllerTest {
         .andReturn()
         .response
         .contentAsString
-    val type = jacksonTypeRef<List<GetEmployeeDTO>>()
+    val type = jacksonTypeRef<PageResult<GetEmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
     val expectedEmployees =
       this.employees.filterIndexed { index, employee -> index >= 10 && index <= 19 }
 
-    assertThat(employees).hasSize(expectedEmployees.size)
-    employees.forEachIndexed { index, employee ->
+    assertThat(employees.totalRecords).isEqualTo(this.employees.size.toLong())
+    assertThat(employees.contents).hasSize(expectedEmployees.size)
+    employees.contents.forEachIndexed { index, employee ->
       val expected = expectedEmployees[index]
       assertThat(employee)
         .hasFieldOrPropertyWithValue("id", expected.id)
