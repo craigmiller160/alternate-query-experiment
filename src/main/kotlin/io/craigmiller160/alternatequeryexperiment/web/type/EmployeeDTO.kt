@@ -1,10 +1,13 @@
 package io.craigmiller160.alternatequeryexperiment.web.type
 
+import com.querydsl.core.annotations.QueryProjection
 import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import java.time.LocalDate
 import java.util.UUID
 
-data class EmployeeDTO(
+data class EmployeeDTO
+@QueryProjection
+constructor(
   val id: UUID,
   val firstName: String?,
   val lastName: String?,

@@ -1,5 +1,6 @@
 package io.craigmiller160.alternatequeryexperiment.querydsl
 
+import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
@@ -14,10 +15,20 @@ class QueryDslService(
 ) {
   // TODO add pagination
   fun getAllEmployees(): List<EmployeeDTO> {
-    queryFactory
-      .select(QEmployee.employee, QPosition.position.name)
+    // TODO try to find some way to use the constructor of the DTO directly
+    return queryFactory
+      .query()
+      .select(
+        Projections.constructor(
+          EmployeeDTO::class.java,
+          QEmployee.employee.id,
+          QEmployee.employee.firstName,
+          QEmployee.employee.lastName,
+          QEmployee.employee.dateOfBirth,
+          QEmployee.employee.positionId,
+          QPosition.position.name))
       .from(QEmployee.employee, QPosition.position)
       .where(QPosition.position.id.eq(QEmployee.employee.positionId))
-    TODO()
+      .fetch()
   }
 }
