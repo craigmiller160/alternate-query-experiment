@@ -6,11 +6,14 @@ import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
 import io.craigmiller160.alternatequeryexperiment.data.entity.QTeam
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
+import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetTeamProjection
 import io.craigmiller160.alternatequeryexperiment.mapper.EmployeeMapper
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
+import java.lang.RuntimeException
 import java.util.UUID
+import kotlin.RuntimeException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -55,15 +58,20 @@ class QueryDslService(
   }
 
   fun getTeam(teamId: UUID): GetTeamDTO {
-    val tuple =
+    val team =
       queryFactory
         .query()
         .from(QTeam.team)
         .join(QEmployee.employee)
         .on(QTeam.team.supervisorId.eq(QEmployee.employee.id))
         .where(QTeam.team.id.eq(teamId))
-        .select(QTeam.team, QEmployee.employee)
+        .select(
+          QGetTeamProjection(
+            QTeam.team.id,
+            QTeam.team.supervisorId,
+            QEmployee.employee.firstName,
+            QEmployee.employee.lastName))
         .fetchOne()
-    TODO()
+        ?: throw RuntimeException("Not found: $teamId")
   }
 }
