@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
+import io.craigmiller160.alternatequeryexperiment.data.entity.QTeam
 import io.craigmiller160.alternatequeryexperiment.data.querydsl.projection.QGetEmployeeProjection
 import io.craigmiller160.alternatequeryexperiment.mapper.EmployeeMapper
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
@@ -54,6 +55,15 @@ class QueryDslService(
   }
 
   fun getTeam(teamId: UUID): GetTeamDTO {
+    val tuple =
+      queryFactory
+        .query()
+        .from(QTeam.team)
+        .join(QEmployee.employee)
+        .on(QTeam.team.supervisorId.eq(QEmployee.employee.id))
+        .where(QTeam.team.id.eq(teamId))
+        .select(QTeam.team, QEmployee.employee)
+        .fetchOne()
     TODO()
   }
 }
