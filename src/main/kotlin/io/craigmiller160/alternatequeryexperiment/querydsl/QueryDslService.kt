@@ -1,10 +1,10 @@
 package io.craigmiller160.alternatequeryexperiment.querydsl
 
-import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QPosition
 import io.craigmiller160.alternatequeryexperiment.web.type.EmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.QEmployeeDTO
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,12 +13,10 @@ class QueryDslService(private val queryFactory: JPAQueryFactory) {
   fun getAllEmployees(): List<EmployeeDTO> {
     //    PathBuilderFactory().create()
     //    Querydsl(null, null)
-    // TODO try to find some way to use the constructor of the DTO directly
     return queryFactory
       .query()
       .select(
-        Projections.constructor(
-          EmployeeDTO::class.java,
+        QEmployeeDTO(
           QEmployee.employee.id,
           QEmployee.employee.firstName,
           QEmployee.employee.lastName,
