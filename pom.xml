@@ -159,6 +159,11 @@
                                     <version>${querydsl.version}</version>
                                     <classifier>jpa</classifier>
                                 </annotationProcessorPath>
+                                <annotationProcessorPath>
+                                    <groupId>org.mapstruct</groupId>
+                                    <artifactId>mapstruct-processor</artifactId>
+                                    <version>${mapstruct.version}</version>
+                                </annotationProcessorPath>
                             </annotationProcessorPaths>
                         </configuration>
                     </execution>
