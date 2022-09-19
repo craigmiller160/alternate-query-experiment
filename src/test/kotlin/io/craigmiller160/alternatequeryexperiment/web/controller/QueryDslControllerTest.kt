@@ -104,14 +104,15 @@ class QueryDslControllerTest {
       .hasFieldOrPropertyWithValue("supervisorId", team.supervisorId)
       .hasFieldOrPropertyWithValue("supervisorFirstName", supervisor.firstName)
       .hasFieldOrPropertyWithValue("supervisorLastName", supervisor.lastName)
-    assertThat(teamResponse.members).hasSize(teamMemberEmployees.size)
-    teamResponse.members.forEachIndexed { index, teamMember ->
-      val expectedTeamMember = teamMemberEmployees[index]
-      assertThat(teamMember)
-        .hasFieldOrPropertyWithValue("id", expectedTeamMember.id)
-        .hasFieldOrPropertyWithValue("firstName", expectedTeamMember.firstName)
-        .hasFieldOrPropertyWithValue("lastName", expectedTeamMember.lastName)
-        .hasFieldOrPropertyWithValue("positionName", positionMap[expectedTeamMember.positionId])
-    }
+    //    assertThat(teamResponse.members).hasSize(teamMemberEmployees.size)
+    //    teamResponse.members.forEachIndexed { index, teamMember ->
+    //      val expectedTeamMember = teamMemberEmployees[index]
+    //      assertThat(teamMember)
+    //        .hasFieldOrPropertyWithValue("id", expectedTeamMember.id)
+    //        .hasFieldOrPropertyWithValue("firstName", expectedTeamMember.firstName)
+    //        .hasFieldOrPropertyWithValue("lastName", expectedTeamMember.lastName)
+    //        .hasFieldOrPropertyWithValue("positionName",
+    // positionMap[expectedTeamMember.positionId])
+    //    }
   }
 }

@@ -6,5 +6,6 @@ import org.mapstruct.Mapper
 
 @Mapper(componentModel = "spring")
 interface TeamMapper {
+  //  @Mapping(target = "members", defaultExpression = "java(List.of())")
   fun getTeamProjectionToGetTeamDTO(projection: GetTeamProjection): GetTeamDTO
 }
