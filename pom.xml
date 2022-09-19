@@ -34,9 +34,15 @@
         <spotless.version>2.26.0</spotless.version>
         <postgres.version>42.5.0</postgres.version>
         <faker.version>1.0.2</faker.version>
+        <querydsl.version>5.0.0</querydsl.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
