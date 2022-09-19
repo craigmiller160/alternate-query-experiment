@@ -49,16 +49,19 @@ class QueryDslControllerTest {
   fun getAllEmployees() {
     val responseString =
       mockMvc
-        .get("/querydsl/employees")
+        .get("/querydsl/employees?page=1&size=10")
         .andExpect { status { isOk() } }
         .andReturn()
         .response
         .contentAsString
     val type = jacksonTypeRef<List<GetEmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
-    assertThat(employees).hasSize(this.employees.size)
+    val expectedEmployees =
+      this.employees.filterIndexed { index, employee -> index >= 10 && index <= 19 }
+
+    assertThat(employees).hasSize(expectedEmployees.size)
     employees.forEachIndexed { index, employee ->
-      val expected = this.employees[index]
+      val expected = expectedEmployees[index]
       assertThat(employee)
         .hasFieldOrPropertyWithValue("id", expected.id)
         .hasFieldOrPropertyWithValue("firstName", expected.firstName)
