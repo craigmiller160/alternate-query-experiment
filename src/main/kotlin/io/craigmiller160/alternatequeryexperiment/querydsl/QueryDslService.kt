@@ -18,7 +18,6 @@ class QueryDslService(
   private val employeeMapper: EmployeeMapper,
   private val employeeQuerydsl: Querydsl
 ) {
-  // TODO add pagination
   fun getAllEmployees(page: Int, size: Int): PageResult<GetEmployeeDTO> {
     val baseQuery =
       queryFactory
