@@ -2,6 +2,7 @@ package io.craigmiller160.alternatequeryexperiment.web.controller
 
 import io.craigmiller160.alternatequeryexperiment.querydsl.QueryDslService
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
+import io.craigmiller160.alternatequeryexperiment.web.type.GetTeamDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
 import java.util.UUID
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,5 +20,6 @@ class QueryDslController(private val queryDslService: QueryDslService) {
     @RequestParam("size") size: Int
   ): PageResult<GetEmployeeDTO> = queryDslService.getAllEmployees(page, size)
 
-  @GetMapping("/team/{teamId}") fun getTeam(@PathVariable("teamId") teamId: UUID) {}
+  @GetMapping("/team/{teamId}")
+  fun getTeam(@PathVariable("teamId") teamId: UUID): GetTeamDTO = queryDslService.getTeam(teamId)
 }
