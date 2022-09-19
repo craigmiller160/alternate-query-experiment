@@ -3,8 +3,12 @@ package io.craigmiller160.alternatequeryexperiment.web.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
+import io.craigmiller160.alternatequeryexperiment.data.entity.Team
+import io.craigmiller160.alternatequeryexperiment.data.entity.TeamMember
 import io.craigmiller160.alternatequeryexperiment.data.repository.EmployeeRepository
 import io.craigmiller160.alternatequeryexperiment.data.repository.PositionRepository
+import io.craigmiller160.alternatequeryexperiment.data.repository.TeamMemberRepository
+import io.craigmiller160.alternatequeryexperiment.data.repository.TeamRepository
 import io.craigmiller160.alternatequeryexperiment.web.type.GetEmployeeDTO
 import io.craigmiller160.alternatequeryexperiment.web.type.PageResult
 import java.util.UUID
@@ -27,9 +31,13 @@ class QueryDslControllerTest {
   @Autowired private lateinit var objectMapper: ObjectMapper
   @Autowired private lateinit var employeeRepository: EmployeeRepository
   @Autowired private lateinit var positionRepository: PositionRepository
+  @Autowired private lateinit var teamRepository: TeamRepository
+  @Autowired private lateinit var teamMemberRepository: TeamMemberRepository
 
   private lateinit var positionMap: Map<UUID, String>
   private lateinit var employees: List<Employee>
+  private lateinit var teams: List<Team>
+  private lateinit var teamMembers: List<TeamMember>
 
   @BeforeEach
   fun setup() {
@@ -44,6 +52,8 @@ class QueryDslControllerTest {
           lastNameCompare
         }
       }
+    teams = teamRepository.findAll()
+    teamMembers = teamMemberRepository.findAll()
   }
 
   @Test
@@ -57,8 +67,7 @@ class QueryDslControllerTest {
         .contentAsString
     val type = jacksonTypeRef<PageResult<GetEmployeeDTO>>()
     val employees = objectMapper.readValue(responseString, type)
-    val expectedEmployees =
-      this.employees.filterIndexed { index, employee -> index >= 10 && index <= 19 }
+    val expectedEmployees = this.employees.filterIndexed { index, employee -> index in 10..19 }
 
     assertThat(employees.totalRecords).isEqualTo(this.employees.size.toLong())
     assertThat(employees.contents).hasSize(expectedEmployees.size)
@@ -73,4 +82,6 @@ class QueryDslControllerTest {
         .hasFieldOrPropertyWithValue("positionName", positionMap[expected.positionId])
     }
   }
+
+  @Test fun getTeam() {}
 }
