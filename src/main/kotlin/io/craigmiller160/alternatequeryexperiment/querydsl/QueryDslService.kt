@@ -86,6 +86,7 @@ class QueryDslService(
         .join(QPosition.position)
         .on(QPosition.position.id.eq(QEmployee.employee.positionId))
         .where(QTeamMember.teamMember.teamId.eq(team.id))
+        .orderBy(QEmployee.employee.lastName.asc(), QEmployee.employee.firstName.asc())
         .select(
           QGetTeamMemberProjection(
             QEmployee.employee.id,
