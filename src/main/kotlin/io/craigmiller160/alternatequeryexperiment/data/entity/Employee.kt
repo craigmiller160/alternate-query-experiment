@@ -7,7 +7,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "employee")
+@Table(name = "employees")
 class Employee {
   @Id var id: UUID = UUID.randomUUID()
   var firstName: String? = null
