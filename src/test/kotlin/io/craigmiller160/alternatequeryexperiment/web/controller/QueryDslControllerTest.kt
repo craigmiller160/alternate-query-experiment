@@ -93,7 +93,7 @@ class QueryDslControllerTest {
 
     val responseString =
       mockMvc
-        .get("/querydsl/employees?page=1&size=10")
+        .get("/querydsl/employees?page=0&size=10&firstNameStartsWith=A")
         .andExpect { status { isOk() } }
         .andReturn()
         .response

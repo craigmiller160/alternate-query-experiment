@@ -30,7 +30,7 @@ class QueryDslService(
 ) {
 
   private fun buildSearchWhereClause(firstNameStartsWith: String?): BooleanBuilder {
-    val builder = BooleanBuilder(QPosition.position.id.eq(QEmployee.employee.positionId))
+    val builder = BooleanBuilder()
     return firstNameStartsWith?.let { builder.and(QEmployee.employee.firstName.startsWith(it)) }
       ?: builder
   }
