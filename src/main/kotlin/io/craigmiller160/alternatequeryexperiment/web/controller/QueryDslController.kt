@@ -17,8 +17,9 @@ class QueryDslController(private val queryDslService: QueryDslService) {
   @GetMapping("/employees")
   fun getAllEmployees(
     @RequestParam("page") page: Int,
-    @RequestParam("size") size: Int
-  ): PageResult<GetEmployeeDTO> = queryDslService.getAllEmployees(page, size)
+    @RequestParam("size") size: Int,
+    @RequestParam(value = "firstNameStartsWith", required = false) firstNameStartsWith: String?
+  ): PageResult<GetEmployeeDTO> = queryDslService.getAllEmployees(page, size, firstNameStartsWith)
 
   @GetMapping("/teams/{teamId}")
   fun getTeam(@PathVariable("teamId") teamId: UUID): GetTeamDTO = queryDslService.getTeam(teamId)

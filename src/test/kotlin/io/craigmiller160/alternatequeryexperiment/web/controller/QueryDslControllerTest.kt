@@ -85,6 +85,30 @@ class QueryDslControllerTest {
   }
 
   @Test
+  fun searchForEmployees() {
+    val matchingEmployees =
+      this.employees.filter { it.firstName?.startsWith("A") ?: false }.take(10)
+    // Making sure we have randomly generated employees with this prefix
+    assertThat(matchingEmployees).isNotEmpty
+
+    val responseString =
+      mockMvc
+        .get("/querydsl/employees?page=1&size=10")
+        .andExpect { status { isOk() } }
+        .andReturn()
+        .response
+        .contentAsString
+    val type = jacksonTypeRef<PageResult<GetEmployeeDTO>>()
+    val employees = objectMapper.readValue(responseString, type)
+
+    assertThat(employees.contents).hasSize(matchingEmployees.size)
+    employees.contents.forEachIndexed { index, employee ->
+      val expected = matchingEmployees[index]
+      assertThat(employee).hasFieldOrPropertyWithValue("id", expected.id)
+    }
+  }
+
+  @Test
   fun getTeam() {
     val team = teams.first()
     val supervisor = this.employees.first { it.id == team.supervisorId }

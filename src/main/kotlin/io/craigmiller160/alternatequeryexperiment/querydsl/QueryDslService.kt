@@ -1,5 +1,6 @@
 package io.craigmiller160.alternatequeryexperiment.querydsl
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import io.craigmiller160.alternatequeryexperiment.data.entity.Employee
 import io.craigmiller160.alternatequeryexperiment.data.entity.QEmployee
@@ -27,14 +28,24 @@ class QueryDslService(
   private val queryDslSupport: QueryDslSupport,
   private val teamMapper: TeamMapper
 ) {
-  fun getAllEmployees(page: Int, size: Int): PageResult<GetEmployeeDTO> {
+
+  private fun buildSearchWhereClause(firstNameStartsWith: String?): BooleanBuilder {
+    val builder = BooleanBuilder(QPosition.position.id.eq(QEmployee.employee.positionId))
+    return firstNameStartsWith?.let { builder.and(QEmployee.employee.firstName.startsWith(it)) }
+      ?: builder
+  }
+  fun getAllEmployees(
+    page: Int,
+    size: Int,
+    firstNameStartsWith: String?
+  ): PageResult<GetEmployeeDTO> {
     val baseQuery =
       queryFactory
         .query()
         .from(QEmployee.employee)
         .join(QPosition.position)
         .on(QEmployee.employee.positionId.eq(QPosition.position.id))
-        .where(QPosition.position.id.eq(QEmployee.employee.positionId))
+        .where(buildSearchWhereClause(firstNameStartsWith))
     val count = baseQuery.select(QEmployee.employee.id.count()).fetchFirst()
 
     val pageable =
