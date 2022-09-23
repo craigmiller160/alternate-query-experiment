@@ -142,13 +142,6 @@
                 </dependencies>
                 <executions>
                     <execution>
-                        <id>compile</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>kapt</id>
                         <phase>generate-sources</phase>
                         <goals>
@@ -186,6 +179,13 @@
                                 </annotationProcessorPath>
                             </annotationProcessorPaths>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>test-compile</id>
